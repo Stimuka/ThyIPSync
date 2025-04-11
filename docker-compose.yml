@@ -1,0 +1,29 @@
+version: "3.9"
+services:
+  ipam-backend:
+    container_name: ipam-backend
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./backend/ipam_data:/data
+    networks:
+      - thynet_container  # Backend draait alleen op het interne netwerk
+
+  ipam-frontend:
+    container_name: ipam-frontend
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile.frontend
+    ports:
+      - "3000:3000"  # De poort voor extern toegang
+    networks:
+      - thynet_container  # Externe toegang voor de frontend via dit netwerk
+    # IPv4 address voor externe toegang als je dit wilt configureren:
+    # ipv4_address: 192.168.4.90  # Dit kan worden gebruikt voor extern bereik
+
+networks:
+  thynet_container:
+    external: true  # Verbindt met extern netwerk zoals je eerder had
